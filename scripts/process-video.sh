@@ -17,6 +17,7 @@ FULLDESCRIPTION=$(echo "$JSONID" | jq -r '.description')
 THUMBNSILURL=$(youtube-dl $IDURL --get-thumbnail)
 NEWFILENAME=${DATE}-${TITLE}-${ID}
 NEWFILENAME=${NEWFILENAME///}
+NEWFILENAME=${NEWFILENAME//\"}
 
 curl -o "${NEWFILENAME}.jpg" "$THUMBNSILURL"
 convert "${NEWFILENAME}.jpg" "${NEWFILENAME}.jpg"
