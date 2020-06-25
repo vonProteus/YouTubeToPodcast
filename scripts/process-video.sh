@@ -46,12 +46,14 @@ DURATION=${DURATION%.*}
 BITRATE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=bit_rate -v quiet -of csv="p=0") / 1024))
 FREQUENCY=$(ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json | jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate")
 
+IMGPGURL="http://${HOST}/imegs/${NEWFILENAME}.jpg"
+
 cp template.xml "${NEWFILENAME}.xml"
 
 xml ed -L -u "/PodcastGenerator/episode/titlePG" --value "$TITLE" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/shortdescPG" --value "$SHORT" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/longdescPG" --value "$FULL" "${NEWFILENAME}.xml"
-xml ed -L -u "/PodcastGenerator/episode/imgPG" --value "$THUMBNSILURL" "${NEWFILENAME}.xml"
+xml ed -L -u "/PodcastGenerator/episode/imgPG" --value "$IMGPGURL" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/categoriesPG/category1PG" --value "uncategorized" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/categoriesPG/category2PG" --value "" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/categoriesPG/category3PG" --value "" "${NEWFILENAME}.xml"
