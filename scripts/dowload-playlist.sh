@@ -10,4 +10,4 @@ if [ ! -f $ARCHIVEFILE ]; then
 fi
 
 
-youtube-dl $YTURL --download-archive $ARCHIVEFILE  --yes-playlist -x --audio-format mp3 --id --exec './process-video.sh {}'
+youtube-dl $YTURL --download-archive $ARCHIVEFILE  --yes-playlist --limit-rate 1.5M --playlist-random --playlist-items 1-$SKIPARCHIVEFILEINIT --verbose -x --audio-format mp3 --id --exec './process-video.sh {}'
