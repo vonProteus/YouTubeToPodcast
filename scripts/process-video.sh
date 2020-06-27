@@ -45,7 +45,7 @@ DURATION=${DURATION%.*}
 BITRATE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=bit_rate -v quiet -of csv="p=0") / 1024))
 FREQUENCY=$(ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json | jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate")
 
-IMGPGURL="http://${HOST}/imegs/${NEWFILENAME}.jpg"
+IMGPGURL="http://${HOST}/images/${NEWFILENAME}.jpg"
 
 cp template.xml "${NEWFILENAME}.xml"
 
