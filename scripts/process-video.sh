@@ -2,11 +2,10 @@
 
 FILE=$1
 ID="${FILE%.*}"
-IDURL=https://www.youtube.com/watch?v=${ID}
 
 echo working on $FILE
 
-JSONID=$(youtube-dl $IDURL -J)
+JSONID=$(cat ${ID}.info.json)
 
 ORGINALURL=$(echo "$JSONID" | jq -r  '.webpage_url')
 TITLE=$(echo "$JSONID" | jq -r  '.title')
@@ -14,7 +13,7 @@ UPLOADER=$(echo "$JSONID" | jq -r  '.uploader')
 SDATE=$(echo "$JSONID" | jq -r '.upload_date')
 DATE=$(date -d "${SDATE}0000" +"%Y-%m-%d")
 FULLDESCRIPTION=$(echo "$JSONID" | jq -r '.description')
-THUMBNSILURL=$(youtube-dl $IDURL --get-thumbnail)
+THUMBNSILURL=$(echo "$JSONID" |jq -r ".thumbnails | max_by(.height).url")
 NEWFILENAME=${DATE}-${TITLE}-${ID}
 NEWFILENAME=${NEWFILENAME///}
 NEWFILENAME=${NEWFILENAME//\"}
@@ -77,6 +76,6 @@ cp -p "$NEWFILENAME.mp3" "${PGAPPDATA}/media"
 cp -p "$NEWFILENAME.xml" "${PGAPPDATA}/media"
 cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
 
-rm "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "./$FILE"
+rm "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "./$FILE" "./${ID}.info.json"
 
 curl $PGREGENERATERSSURL
