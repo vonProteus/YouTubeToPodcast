@@ -38,8 +38,6 @@ mid3v2 -t "$TITLE" \
        --picture="${NEWFILENAME}.jpg" \
        "$NEWFILENAME.mp3"
 
-mid3v2 "$NEWFILENAME.mp3"
-
 ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json > "$NEWFILENAME.json"
 
 SIZE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=size -v quiet -of csv=p=0) / 1024 / 1024))
@@ -79,6 +77,6 @@ cp -p "$NEWFILENAME.mp3" "${PGAPPDATA}/media"
 cp -p "$NEWFILENAME.xml" "${PGAPPDATA}/media"
 cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
 
-rm "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "./$FILE" "./${ID}.info.json" "$NEWFILENAME.json"
+rm "./$FILE" "./${ID}.info.json" "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "$NEWFILENAME.json"
 
 curl $PGREGENERATERSSURL

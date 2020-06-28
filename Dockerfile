@@ -1,16 +1,16 @@
 FROM alpine:edge
 
-ENV YTURL http://example.com
-ENV ARCHIVEFILE /data/youtube-arhive-file.txt
-ENV SKIPARCHIVEFILEINIT 5
-ENV PGAPPDATA /data/
-ENV PGREGENERATERSSURL http://example.com
-ENV COOKIEFILE /data/youtube-cookie-file.txt
-ENV LIMITRATE 1.5M
-ENV YTDLOPTIONS --verbose
-ENV MINSLEAP 30
-ENV MAXSELEAP 120
-ENV HOST http://example.com
+ENV YTURL=http://example.com/video?v=wwdsfkpgjpds \
+    ARCHIVEFILE=/data/youtube-arhive-file.txt \
+    SKIPARCHIVEFILEINIT=5 \
+    PGAPPDATA=/data/ \
+    PGREGENERATERSSURL=http://example.com \
+    COOKIEFILE=/data/youtube-cookie-file.txt \
+    LIMITRATE=1.5M \
+    YTDLOPTIONS="--verbose" \
+    MINSLEAP=30 \
+    MAXSELEAP=120 \
+    HOST=example.com
 
 
 RUN apk add youtube-dl bash xmlstarlet ffmpeg jq mutagen curl imagemagick rtmpdump
