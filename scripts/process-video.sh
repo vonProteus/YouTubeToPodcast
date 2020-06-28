@@ -24,6 +24,8 @@ convert "${NEWFILENAME}.jpg" "${NEWFILENAME}.jpg"
 cp "./$FILE" "$NEWFILENAME.mp3"
 mid3v2 -D "$NEWFILENAME.mp3"
 
+FULLDESCRIPTION=${FULLDESCRIPTION//&/ !and! }
+
 FULL="Orginal Viedo: <a href=\"$ORGINALURL\">$ORGINALURL</a>
 
 $FULLDESCRIPTION"
@@ -40,7 +42,7 @@ mid3v2 -t "$TITLE" \
 mid3v2 "$NEWFILENAME.mp3"
 
 SIZE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=size -v quiet -of csv=p=0) / 1024 / 1024))
-DURATION=$(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=duration -v quiet -of csv="p=0" -sexagesimal)
+DURATION=$(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=duration -v quiet -of csv="p=0")
 DURATION=${DURATION%.*}
 BITRATE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=bit_rate -v quiet -of csv="p=0") / 1024))
 FREQUENCY=$(ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json | jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate")
