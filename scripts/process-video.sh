@@ -4,16 +4,17 @@ FILE=$1
 ID="${FILE%.*}"
 
 echo working on $FILE
+JSONFILE=${ID}.info.json
 
-JSONID=$(cat ${ID}.info.json)
 
-ORGINALURL=$(echo "$JSONID" | jq -r  '.webpage_url')
-TITLE=$(echo "$JSONID" | jq -r  '.title')
-UPLOADER=$(echo "$JSONID" | jq -r  '.uploader')
-SDATE=$(echo "$JSONID" | jq -r '.upload_date')
+ORGINALURL=$(jq -r  '.webpage_url' $JSONFILE)
+TITLE=$(jq -r  '.title' $JSONFILE)
+UPLOADER=$(jq -r  '.uploader' $JSONFILE)
+SDATE=$(jq -r '.upload_date' $JSONFILE)
+FULLDESCRIPTION=$(jq -r '.description' $JSONFILE)
+THUMBNSILURL=$(jq -r ".thumbnails | max_by(.height).url" $JSONFILE)
+
 DATE=$(date -d "${SDATE}0000" +"%Y-%m-%d")
-FULLDESCRIPTION=$(echo "$JSONID" | jq -r '.description')
-THUMBNSILURL=$(echo "$JSONID" |jq -r ".thumbnails | max_by(.height).url")
 NEWFILENAME=${DATE}-$(echo ${TITLE} | sed 's/\W/_/g')-${ID}
 
 curl -o "${NEWFILENAME}.jpg" "$THUMBNSILURL"
@@ -39,11 +40,13 @@ mid3v2 -t "$TITLE" \
 
 mid3v2 "$NEWFILENAME.mp3"
 
+ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json > "$NEWFILENAME.json"
+
 SIZE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=size -v quiet -of csv=p=0) / 1024 / 1024))
-DURATION=$(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=duration -v quiet -of csv="p=0")
+DURATION=$(jq -r ".streams[]|select(.codec_name == \"mp3\").duration" "$NEWFILENAME.json")
 DURATION=${DURATION%.*}
-BITRATE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=bit_rate -v quiet -of csv="p=0") / 1024))
-FREQUENCY=$(ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json | jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate")
+BITRATE=$(($(jq -r ".streams[]|select(.codec_name == \"mp3\").bit_rate" "$NEWFILENAME.json") / 1024))
+FREQUENCY=$(jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate" "$NEWFILENAME.json")
 
 IMGPGURL="http://${HOST}/images/${NEWFILENAME}.jpg"
 
@@ -76,6 +79,6 @@ cp -p "$NEWFILENAME.mp3" "${PGAPPDATA}/media"
 cp -p "$NEWFILENAME.xml" "${PGAPPDATA}/media"
 cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
 
-rm "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "./$FILE" "./${ID}.info.json"
+rm "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "./$FILE" "./${ID}.info.json" "$NEWFILENAME.json"
 
 curl $PGREGENERATERSSURL
