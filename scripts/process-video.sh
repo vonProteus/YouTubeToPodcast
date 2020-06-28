@@ -14,8 +14,7 @@ SDATE=$(echo "$JSONID" | jq -r '.upload_date')
 DATE=$(date -d "${SDATE}0000" +"%Y-%m-%d")
 FULLDESCRIPTION=$(echo "$JSONID" | jq -r '.description')
 THUMBNSILURL=$(echo "$JSONID" |jq -r ".thumbnails | max_by(.height).url")
-NEWFILENAME=${DATE}-${TITLE}-${ID}
-NEWFILENAME=${NEWFILENAME//[\'\"\`\/\!\?\\]/_}
+NEWFILENAME=${DATE}-$(echo ${TITLE} | sed 's/\W/_/g')-${ID}
 
 curl -o "${NEWFILENAME}.jpg" "$THUMBNSILURL"
 convert "${NEWFILENAME}.jpg" "${NEWFILENAME}.jpg"
