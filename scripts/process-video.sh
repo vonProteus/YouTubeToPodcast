@@ -23,7 +23,7 @@ convert "${NEWFILENAME}.jpg" "${NEWFILENAME}.jpg"
 cp "./$FILE" "$NEWFILENAME.mp3"
 mid3v2 -D "$NEWFILENAME.mp3"
 
-FULL="Orginal Viedo: <a href=\"$ORGINALURL\">$ORGINALURL</a>
+FULL="Orginal Viedo: $ORGINALURL
 
 $FULLDESCRIPTION"
 SHORT=${FULL:0:200}
@@ -44,7 +44,7 @@ DURATION=${DURATION%.*}
 BITRATE=$(($(jq -r ".streams[]|select(.codec_name == \"mp3\").bit_rate" "$NEWFILENAME.json") / 1024))
 FREQUENCY=$(jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate" "$NEWFILENAME.json")
 
-IMGPGURL="https://${HOST}/images/${NEWFILENAME}.jpg"
+IMGPGURL="http://${HOST}/images/${NEWFILENAME}.jpg"
 
 cp template.xml "${NEWFILENAME}.xml"
 
