@@ -27,12 +27,16 @@ script:
   - docker buildx create --name builder --driver docker-container --use
   - docker buildx inspect --bootstrap
   - VERSION=$(cat ./VERSION)
+  - VERSIONARRAY=(`echo $VERSION | tr '.' ' '`)
+  - GITHASH=$(git rev-parse --short HEAD)
   - docker buildx build 
                  --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` 
-                 --build-arg VCS_REF=`git rev-parse --short HEAD` 
+                 --build-arg VCS_REF=${GITHASH}
                  --build-arg VERSION=${VERSION} 
                  --push 
                  --platform linux/arm/v7,linux/arm64/v8,linux/386,linux/amd64 
                  -t ${DOCKER_REPOSITORIE}:latest 
-                 -t ${DOCKER_REPOSITORIE}:${VERSION} 
+                 -t ${DOCKER_REPOSITORIE}:v.${VERSIONARRAY[0]}.${VERSIONARRAY[1]}.${VERSIONARRAY[2]}
+                 -t ${DOCKER_REPOSITORIE}:v.${VERSIONARRAY[0]}.${VERSIONARRAY[1]}
+                 -t ${DOCKER_REPOSITORIE}:v.${VERSIONARRAY[0]}
                  .
