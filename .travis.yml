@@ -3,7 +3,7 @@ language: bash
 dist: bionic
 
 env:
-  - DOCKER_CLI_EXPERIMENTAL=enabled BUILDX_VER=v0.4.1 VERSION=latest
+  - DOCKER_CLI_EXPERIMENTAL=enabled BUILDX_VER=v0.4.1
 
 before_install:
   - sudo rm -rf /var/lib/apt/lists/*
@@ -26,4 +26,13 @@ script:
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name builder --driver docker-container --use
   - docker buildx inspect --bootstrap
-  - docker buildx build --push --platform linux/arm/v7,linux/arm64/v8,linux/386,linux/amd64 -t ${DOCKER_REPOSITORIE}:${VERSION} .
+  - VERSION=$(cat ./VERSION)
+  - docker buildx build 
+                 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` 
+                 --build-arg VCS_REF=`git rev-parse --short HEAD` 
+                 --build-arg VERSION=${VERSION} 
+                 --push 
+                 --platform linux/arm/v7,linux/arm64/v8,linux/386,linux/amd64 
+                 -t ${DOCKER_REPOSITORIE}:latest 
+                 -t ${DOCKER_REPOSITORIE}:${VERSION} 
+                 .
