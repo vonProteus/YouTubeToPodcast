@@ -23,8 +23,6 @@ convert "${NEWFILENAME}.jpg" "${NEWFILENAME}.jpg"
 cp "./$FILE" "$NEWFILENAME.mp3"
 mid3v2 -D "$NEWFILENAME.mp3"
 
-FULLDESCRIPTION=${FULLDESCRIPTION//&/ !and! }
-
 FULL="Orginal Viedo: <a href=\"$ORGINALURL\">$ORGINALURL</a>
 
 $FULLDESCRIPTION"
@@ -46,18 +44,18 @@ DURATION=${DURATION%.*}
 BITRATE=$(($(jq -r ".streams[]|select(.codec_name == \"mp3\").bit_rate" "$NEWFILENAME.json") / 1024))
 FREQUENCY=$(jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate" "$NEWFILENAME.json")
 
-IMGPGURL="http://${HOST}/images/${NEWFILENAME}.jpg"
+IMGPGURL="https://${HOST}/images/${NEWFILENAME}.jpg"
 
 cp template.xml "${NEWFILENAME}.xml"
 
-xml ed -L -u "/PodcastGenerator/episode/titlePG" --value "$TITLE" "${NEWFILENAME}.xml"
-xml ed -L -u "/PodcastGenerator/episode/shortdescPG" --value "$SHORT" "${NEWFILENAME}.xml"
-xml ed -L -u "/PodcastGenerator/episode/longdescPG" --value "$FULL" "${NEWFILENAME}.xml"
+xml ed -L -u "/PodcastGenerator/episode/titlePG" --value "#CDATASTART#${TITLE}#CDATAEND#" "${NEWFILENAME}.xml"
+xml ed -L -u "/PodcastGenerator/episode/shortdescPG" --value "#CDATASTART#${SHORT}#CDATAEND#" "${NEWFILENAME}.xml"
+xml ed -L -u "/PodcastGenerator/episode/longdescPG" --value "#CDATASTART#${FULL}#CDATAEND#" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/imgPG" --value "$IMGPGURL" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/categoriesPG/category1PG" --value "uncategorized" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/categoriesPG/category2PG" --value "" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/categoriesPG/category3PG" --value "" "${NEWFILENAME}.xml"
-xml ed -L -u "/PodcastGenerator/episode/keywordsPG" --value "" "${NEWFILENAME}.xml"
+xml ed -L -u "/PodcastGenerator/episode/keywordsPG" --value "#CDATASTART##CDATAEND#" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/explicitPG" --value "no" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/authorPG/namePG" --value "${UPLOADER}" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/authorPG/emailPG" --value "" "${NEWFILENAME}.xml"
@@ -65,6 +63,9 @@ xml ed -L -u "/PodcastGenerator/episode/fileInfoPG/size" --value "$SIZE" "${NEWF
 xml ed -L -u "/PodcastGenerator/episode/fileInfoPG/duration" --value "$DURATION" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/fileInfoPG/bitrate" --value "$BITRATE" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/fileInfoPG/frequency" --value "$FREQUENCY" "${NEWFILENAME}.xml"
+
+sed -i 's/#CDATASTART#/\<\!\[CDATA\[/g' "${NEWFILENAME}.xml"
+sed -i 's/#CDATAEND#/\]\]\>/g' "${NEWFILENAME}.xml"
 
 touch -t ${SDATE}0000 "$NEWFILENAME.mp3"
 touch -t ${SDATE}0000 "$NEWFILENAME.xml"
