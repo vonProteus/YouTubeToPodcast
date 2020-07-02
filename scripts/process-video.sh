@@ -4,7 +4,7 @@ FILE=$1
 ID="${FILE%.*}"
 
 echo working on $FILE
-JSONFILE=${ID}.info.json
+JSONFILE=./${ID}.info.json
 
 
 ORGINALURL=$(jq -r  '.webpage_url' $JSONFILE)
