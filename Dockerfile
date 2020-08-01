@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3
 
 ENV YTURL=http://example.com/video?v=wwdsfkpgjpds \
     ARCHIVEFILE=/data/youtube-arhive-file.txt \
@@ -22,7 +22,8 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0"
 
-RUN apk add youtube-dl bash xmlstarlet ffmpeg jq mutagen curl imagemagick rtmpdump
+RUN apk add --no-cache py-pip bash xmlstarlet ffmpeg jq mutagen curl imagemagick rtmpdump \
+    && pip install --upgrade youtube_dl
 
 WORKDIR /scripts/
 
