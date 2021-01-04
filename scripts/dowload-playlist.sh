@@ -1,6 +1,8 @@
 #!/bin/bash -xe 
 time {
-	pip install --upgrade youtube_dl
+    if [ "$SKIPYTDLUPDATE" == false ] ; then
+	    pip install --upgrade youtube_dl
+    fi
 
 	if [ ! -f $ARCHIVEFILE ]; then
 	    TMPFILE=$(mktemp)

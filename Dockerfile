@@ -10,7 +10,8 @@ ENV YTURL=http://example.com/video?v=wwdsfkpgjpds \
     YTDLOPTIONS="--verbose" \
     MINSLEAP=30 \
     MAXSELEAP=120 \
-    HOST=example.com
+    HOST=example.com \
+    SKIPYTDLUPDATE=false
 
 ARG BUILD_DATE
 ARG VCS_REF
