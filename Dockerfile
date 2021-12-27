@@ -1,4 +1,4 @@
-FROM alpine:3
+FROM alpine:3.15
 
 ENV YTURL=http://example.com/video?v=wwdsfkpgjpds \
     ARCHIVEFILE=/data/youtube-arhive-file.txt \
