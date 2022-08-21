@@ -1,0 +1,25 @@
+version: '3.4'
+services:
+   app:
+      image: vonproteus/youtube-to-podcast
+      build:
+         context: ./
+         dockerfile: Dockerfile
+      environment:
+         - YTURL=https://www.youtube.com/watch?v=dQw4w9WgXcQ
+         - MINSLEAP=1
+         - MAXSELEAP=5
+         - LIMITRATE=999M
+      networks:
+         - external
+      volumes:
+         - ./test/:/data/
+#         - testVolume:/data/
+
+networks:
+   external:
+
+volumes:
+   testVolume:
+
+### Environment variables

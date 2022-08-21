@@ -13,5 +13,5 @@ time {
 	    tail -n +$SKIPARCHIVEFILEINIT $TMPFILE > $ARCHIVEFILE
 	fi
 	
-	youtube-dl $YTURL --download-archive $ARCHIVEFILE  --yes-playlist --limit-rate $LIMITRATE --cookies $COOKIEFILE --no-progress --write-info-json --sleep-interval $MINSLEAP --max-sleep-interval $MAXSELEAP -x --audio-format mp3 --id --exec './process-video.sh {}' $YTDLOPTIONS
+	youtube-dl $YTURL --download-archive $ARCHIVEFILE  --yes-playlist --limit-rate $LIMITRATE --cookies $COOKIEFILE --no-progress --write-info-json --sleep-interval $MINSLEAP --max-sleep-interval $MAXSELEAP -x --audio-format mp3 --id --exec 'process-video.sh {}' $YTDLOPTIONS
 }

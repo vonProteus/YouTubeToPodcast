@@ -13,6 +13,7 @@ UPLOADER=$(jq -r  '.uploader' $JSONFILE)
 SDATE=$(jq -r '.upload_date' $JSONFILE)
 FULLDESCRIPTION=$(jq -r '.description' $JSONFILE)
 THUMBNSILURL=$(jq -r ".thumbnails | max_by(.height).url" $JSONFILE)
+ORGINALDURATION=$(date -d @$(jq -r '.duration' $JSONFILE) -u +%H:%M:%S)
 
 DATE=$(date -d "${SDATE}0000" +"%Y-%m-%d")
 NEWFILENAME=${DATE}-$(echo ${TITLE} | sed 's/\W/_/g')-${ID}
@@ -23,7 +24,8 @@ convert "${NEWFILENAME}.jpg" "${NEWFILENAME}.jpg"
 cp "./$FILE" "$NEWFILENAME.mp3"
 mid3v2 -D "$NEWFILENAME.mp3"
 
-FULL="Orginal Viedo: $ORGINALURL
+FULL="Original Video: $ORGINALURL
+Original duration: $ORGINALDURATION
 
 $FULLDESCRIPTION"
 SHORT=${FULL:0:200}
@@ -46,7 +48,7 @@ FREQUENCY=$(jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate" "$NEWF
 
 IMGPGURL="http://${HOST}/images/${NEWFILENAME}.jpg"
 
-cp template.xml "${NEWFILENAME}.xml"
+cp /scripts/template.xml "${NEWFILENAME}.xml"
 
 xml ed -L -u "/PodcastGenerator/episode/titlePG" --value "#CDATASTART#${TITLE}#CDATAEND#" "${NEWFILENAME}.xml"
 xml ed -L -u "/PodcastGenerator/episode/shortdescPG" --value "#CDATASTART#${SHORT}#CDATAEND#" "${NEWFILENAME}.xml"
@@ -74,9 +76,9 @@ touch -t ${SDATE}0000 "$NEWFILENAME.jpg"
 mkdir -p "${PGAPPDATA}/media"
 mkdir -p "${PGAPPDATA}/images"
 
-cp -p "$NEWFILENAME.mp3" "${PGAPPDATA}/media"
-cp -p "$NEWFILENAME.xml" "${PGAPPDATA}/media"
-cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
+sudo -u $CPUID cp -p "$NEWFILENAME.mp3" "${PGAPPDATA}/media"
+sudo -u $CPUID cp -p "$NEWFILENAME.xml" "${PGAPPDATA}/media"
+sudo -u $CPUID cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
 
 rm "./$FILE" "./${ID}.info.json" "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "$NEWFILENAME.json"
 
