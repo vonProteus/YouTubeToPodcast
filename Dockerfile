@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:3.17
 
 ENV YTURL=https://www.youtube.com/watch?v=dQw4w9WgXcQ \
     ARCHIVEFILE=/data/youtube-arhive-file.txt \
