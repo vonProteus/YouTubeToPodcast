@@ -10,6 +10,8 @@ services:
          - MINSLEAP=1
          - MAXSELEAP=5
          - LIMITRATE=999M
+         - YTDLOPTIONS= --verbose --max-downloads 1
+         - CPUID=504
       networks:
          - external
       volumes:
