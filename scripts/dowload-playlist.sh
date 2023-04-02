@@ -6,7 +6,7 @@ time {
       git checkout .
       git clean -fdx
       git pull
-      make
+      make youtube-dl
       popd
    fi
 

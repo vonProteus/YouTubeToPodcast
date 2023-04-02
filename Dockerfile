@@ -26,11 +26,11 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="1.0"
 
 RUN apk add --no-cache py-pip bash xmlstarlet ffmpeg jq mutagen curl imagemagick rtmpdump sudo \
-    && apk add --no-cache git make zip pandoc \
+    && apk add --no-cache git make zip \
     && pip install --upgrade nose virtualenv \
     && git clone https://github.com/ytdl-org/youtube-dl /src \
     && cd /src \
-    && make \
+    && make youtube-dl \
     && ln -s /src/youtube-dl /usr/local/bin/youtube-dl
 
 WORKDIR /tmp/
