@@ -6,6 +6,7 @@ time {
       git checkout .
       git clean -fdx
       git pull
+      echo "updating to version from git $(git rev-parse HEAD)"
       make youtube-dl
       popd
    fi
