@@ -82,4 +82,4 @@ sudo -u $CPUID cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
 
 rm "./$FILE" "./${ID}.info.json" "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "$NEWFILENAME.json"
 
-curl $PGREGENERATERSSURL
+curl $PGREGENERATERSSURL || echo "notifying PodcastGenerator failed…"
