@@ -20,4 +20,9 @@ time {
    fi
 
    youtube-dl $YTURL --download-archive $ARCHIVEFILE --yes-playlist --limit-rate $LIMITRATE --cookies $COOKIEFILE --no-progress --write-info-json --sleep-interval $MINSLEAP --max-sleep-interval $MAXSELEAP -x --audio-format mp3 --id --exec 'process-video.sh {}' $YTDLOPTIONS
+   YT_EXIT_CODE=$?
+
+   curl $PGREGENERATERSSURL || echo "notifying PodcastGenerator failed…"
+
+   exit $YT_EXIT_CODE
 }
