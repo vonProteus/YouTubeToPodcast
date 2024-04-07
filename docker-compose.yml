@@ -12,6 +12,7 @@ services:
          - LIMITRATE=999M
          - YTDLOPTIONS= --verbose --max-downloads 1
          - CPUID=504
+         - YT_GIT_REVISION=d8f134a664d7be2c10aba44fc2d54a8f7b0542ff
       networks:
          - external
       volumes:

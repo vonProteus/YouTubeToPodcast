@@ -2,10 +2,11 @@
 time {
    if [ "$SKIPYTDLUPDATE" == false ]; then
       pushd /src
+      YT_GIT_REVISION=${YT_GIT_REVISION:="master"}
       git reset
-      git checkout .
       git clean -fdx
       git pull
+      git checkout "${YT_GIT_REVISION}"
       echo "updating to version from git $(git rev-parse HEAD)"
       make youtube-dl
       popd
