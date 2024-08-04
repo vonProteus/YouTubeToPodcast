@@ -33,8 +33,8 @@ time {
       --audio-format mp3 \
       --id \
       --exec 'process-video.sh {}' \
-      $YTDLOPTIONS \
-      || YT_EXIT_CODE=$?
+      $YTDLOPTIONS ||
+      YT_EXIT_CODE=$?
 
    curl -i -L "$PGREGENERATERSSURL" || echo "notifying PodcastGenerator failed…"
 

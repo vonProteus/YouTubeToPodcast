@@ -1,4 +1,4 @@
-#!/bin/bash -xe 
+#!/bin/bash -xe
 
 FILE=$1
 ID="${FILE%.*}"
@@ -6,10 +6,9 @@ ID="${FILE%.*}"
 echo working on $FILE
 JSONFILE=./${ID}.info.json
 
-
-ORGINALURL=$(jq -r  '.webpage_url' $JSONFILE)
-TITLE=$(jq -r  '.title' $JSONFILE)
-UPLOADER=$(jq -r  '.uploader' $JSONFILE)
+ORGINALURL=$(jq -r '.webpage_url' $JSONFILE)
+TITLE=$(jq -r '.title' $JSONFILE)
+UPLOADER=$(jq -r '.uploader' $JSONFILE)
 SDATE=$(jq -r '.upload_date' $JSONFILE)
 FULLDESCRIPTION=$(jq -r '.description' $JSONFILE)
 THUMBNSILURL=$(jq -r ".thumbnails | max_by(.height).url" $JSONFILE)
@@ -33,23 +32,23 @@ SHORT=${FULL:0:200}
 SHORT=$FULL
 
 mid3v2 -t "$TITLE" \
-       -a "$UPLOADER" \
-       -g "Speech" \
-       -y "$DATE" \
-       --picture="${NEWFILENAME}.jpg" \
-       "$NEWFILENAME.mp3"
+   -a "$UPLOADER" \
+   -g "Speech" \
+   -y "$DATE" \
+   --picture="${NEWFILENAME}.jpg" \
+   "$NEWFILENAME.mp3"
 
-ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json > "$NEWFILENAME.json"
+ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json >"$NEWFILENAME.json"
 
 SIZE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=size -v quiet -of csv=p=0) / 1024 / 1024))
 DURATION=$(jq -r ".streams[]|select(.codec_name == \"mp3\").duration" "$NEWFILENAME.json")
 DURATION=${DURATION%.*}
 
-if (( $DURATION > $(($ORGINALDURATIONINSECONDS -10)) && $DURATION < $(($ORGINALDURATIONINSECONDS +10)) )); then
-    echo "duration $DURATION is ok"
+if (($DURATION > $(($ORGINALDURATIONINSECONDS - 10)) && $DURATION < $(($ORGINALDURATIONINSECONDS + 10)))); then
+   echo "duration $DURATION is ok"
 else
-    echo "duration $DURATION for $ID is not ok expected value around $ORGINALDURATIONINSECONDS"
-    exit 1
+   echo "duration $DURATION for $ID is not ok expected value around $ORGINALDURATIONINSECONDS"
+   exit 1
 fi
 
 BITRATE=$(($(jq -r ".streams[]|select(.codec_name == \"mp3\").bit_rate" "$NEWFILENAME.json") / 1024))
