@@ -13,7 +13,8 @@ UPLOADER=$(jq -r  '.uploader' $JSONFILE)
 SDATE=$(jq -r '.upload_date' $JSONFILE)
 FULLDESCRIPTION=$(jq -r '.description' $JSONFILE)
 THUMBNSILURL=$(jq -r ".thumbnails | max_by(.height).url" $JSONFILE)
-ORGINALDURATION=$(date -d @$(jq -r '.duration' $JSONFILE) -u +%H:%M:%S)
+ORGINALDURATIONINSECONDS=$(jq -r '.duration' $JSONFILE)
+ORGINALDURATION=$(date -d @$ORGINALDURATIONINSECONDS -u +%H:%M:%S)
 
 DATE=$(date -d "${SDATE}0000" +"%Y-%m-%d")
 NEWFILENAME=${DATE}-$(echo ${TITLE} | sed 's/\W/_/g')-${ID}
@@ -43,6 +44,14 @@ ffprobe -show_streams "$NEWFILENAME.mp3" -v quiet -of json > "$NEWFILENAME.json"
 SIZE=$(($(ffprobe -i "$NEWFILENAME.mp3" -show_entries format=size -v quiet -of csv=p=0) / 1024 / 1024))
 DURATION=$(jq -r ".streams[]|select(.codec_name == \"mp3\").duration" "$NEWFILENAME.json")
 DURATION=${DURATION%.*}
+
+if (( $DURATION > $(($ORGINALDURATIONINSECONDS -10)) && $DURATION < $(($ORGINALDURATIONINSECONDS +10)) )); then
+    echo "duration $DURATION is ok"
+else
+    echo "duration $DURATION for $ID is not ok expected value around $ORGINALDURATIONINSECONDS"
+    exit 1
+fi
+
 BITRATE=$(($(jq -r ".streams[]|select(.codec_name == \"mp3\").bit_rate" "$NEWFILENAME.json") / 1024))
 FREQUENCY=$(jq -r ".streams[]|select(.codec_name == \"mp3\").sample_rate" "$NEWFILENAME.json")
 
