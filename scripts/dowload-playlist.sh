@@ -36,7 +36,7 @@ time {
       $YTDLOPTIONS ||
       YT_EXIT_CODE=$?
 
-   curl -i -L "$PGREGENERATERSSURL" || echo "notifying PodcastGenerator failed…"
+   curl -s -i -L "$PGREGENERATERSSURL" || echo "notifying PodcastGenerator failed…"
 
    exit ${YT_EXIT_CODE:=0}
 }
