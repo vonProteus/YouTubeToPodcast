@@ -12,8 +12,7 @@ ENV YTURL=https://www.youtube.com/watch?v=dQw4w9WgXcQ \
     MAXSELEAP=120 \
     HOST=example.com \
     SKIPYTDLUPDATE=false \
-    PATH=$PATH:/scripts/ \
-    CPUID=\#33
+    PATH=$PATH:/scripts/
 
 ARG BUILD_DATE
 ARG VCS_REF

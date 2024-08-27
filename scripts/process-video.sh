@@ -85,8 +85,8 @@ touch -t ${SDATE}0000 "$NEWFILENAME.jpg"
 mkdir -p "${PGAPPDATA}/media"
 mkdir -p "${PGAPPDATA}/images"
 
-sudo -u $CPUID cp -p "$NEWFILENAME.mp3" "${PGAPPDATA}/media"
-sudo -u $CPUID cp -p "$NEWFILENAME.xml" "${PGAPPDATA}/media"
-sudo -u $CPUID cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
+cp -p "$NEWFILENAME.mp3" "${PGAPPDATA}/media"
+cp -p "$NEWFILENAME.xml" "${PGAPPDATA}/media"
+cp -p "$NEWFILENAME.jpg" "${PGAPPDATA}/images"
 
 rm "./$FILE" "./${ID}.info.json" "$NEWFILENAME.mp3" "$NEWFILENAME.jpg" "$NEWFILENAME.xml" "$NEWFILENAME.json"
