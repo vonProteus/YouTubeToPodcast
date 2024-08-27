@@ -26,12 +26,13 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="1.0"
 
 RUN apk add --no-cache py-pip bash xmlstarlet ffmpeg jq mutagen curl imagemagick rtmpdump sudo \
-    && apk add --no-cache git make zip py3-nose py3-virtualenv \
+    && apk add --no-cache git make zip py3-nose py3-virtualenv py3-certifi \
     && git config --global http.sslBackend "openssl" \
-    && git clone https://github.com/ytdl-org/youtube-dl /src \
+    && git clone https://github.com/yt-dlp/yt-dlp /src \
+    && echo build \
     && cd /src \
-    && make youtube-dl \
-    && ln -s /src/youtube-dl /usr/local/bin/youtube-dl
+    && make yt-dlp \
+    && ln -s /src/yt-dlp /usr/local/bin/yt-dlp
 
 WORKDIR /tmp/
 

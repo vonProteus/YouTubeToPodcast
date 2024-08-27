@@ -1,6 +1,7 @@
 #!/bin/bash -xe
 
 FILE=$1
+FILE="${FILE##*/}"
 ID="${FILE%.*}"
 
 echo working on $FILE

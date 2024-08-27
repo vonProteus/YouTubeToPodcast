@@ -8,19 +8,19 @@ time {
       git pull
       git checkout "${YT_GIT_REVISION}"
       echo "updating to version from git $(git rev-parse HEAD)"
-      make youtube-dl
+      make yt-dlp
       popd
    fi
 
    if [ ! -f $ARCHIVEFILE ]; then
       TMPFILE=$(mktemp)
-      for ID in $(youtube-dl $YTURL --get-id); do
+      for ID in $(yt-dlp $YTURL --get-id); do
          echo "youtube $ID" >>$TMPFILE
       done
       tail -n +$SKIPARCHIVEFILEINIT $TMPFILE >$ARCHIVEFILE
    fi
 
-   youtube-dl $YTURL \
+   yt-dlp $YTURL \
       --download-archive $ARCHIVEFILE \
       --yes-playlist \
       --limit-rate $LIMITRATE \
